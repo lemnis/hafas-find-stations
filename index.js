@@ -62,15 +62,14 @@ const findStations = async (hafas, area, opt = {}, cb = noop) => {
 		}
 		debug(center, `found ${nrOfNew} new`)
 
-		// Right now, don't find more stations on the route, just search withn the bounding box
-		// if (stops.length >= resultsLimit) {
-		// 	debug(center, 'too many, trying with smaller a radius')
-		// 	const tasks = subquery(center, radius).map(([center, radius]) => {
-		// 		// todo: what to do on error? abort?
-		// 		return () => fetchCircle(center, radius).catch(cb)
-		// 	})
-		// 	queue.addAll(tasks, {priority: 1})
-		// }
+		if (stops.length >= resultsLimit) {
+			debug(center, 'too many, trying with smaller a radius')
+			const tasks = subquery(center, radius).map(([center, radius]) => {
+				// todo: what to do on error? abort?
+				return () => fetchCircle(center, radius).catch(cb)
+			})
+			queue.addAll(tasks, {priority: 1})
+		}
 	}
 
 	// todo: what to do on error? abort?
